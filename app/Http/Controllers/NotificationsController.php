@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Facture;
-class FactureController extends Controller
+use App\Models\Notification;
+class NotificationsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $factures = Facture::whereHas('commande', function ($query) {
-            $query->where('idUser', Auth::id());
-        })->with('commande')->latest()->get();
-    
-        return view('factures.index', compact('factures'));
+        //
     }
 
     /**
@@ -66,4 +61,21 @@ class FactureController extends Controller
     {
         //
     }
+    public function afficherNotifications()
+   {
+    $notifications = Notification::where('userId', auth()->id())
+                                  ->orderBy('created_at', 'desc')
+                                  ->get();
+
+    return view('notifications.index', compact('notifications'));
+   }
+   public function marquerCommeLue($id)
+{
+    $notification = Notification::findOrFail($id);
+    $notification->dateLecture = now(); // Marquer la notification comme lue
+    $notification->save();
+
+    return redirect()->back()->with('success', 'Notification marquée comme lue.');
+}
+
 }

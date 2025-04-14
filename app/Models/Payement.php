@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payement extends Model
 {
     use HasFactory;
+    protected $table = 'payements'; 
     protected $fillable = [
         'commandeId', 'montant', 'date',
     ];

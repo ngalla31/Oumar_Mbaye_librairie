@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Notification;
 class NotificationController extends Controller
 {
     /**
@@ -61,4 +61,21 @@ class NotificationController extends Controller
     {
         //
     }
+    public function afficherNotifications()
+    {
+     $notifications = Notification::where('userId', auth()->id())
+                                   ->orderBy('created_at', 'desc')
+                                   ->get();
+ 
+     return view('notifications', compact('notifications'));
+    }
+    public function marquerCommeLue($id)
+ {
+     $notification = Notification::findOrFail($id);
+     $notification->dateLecture = now(); // Marquer la notification comme lue
+     $notification->save();
+ 
+     return redirect()->back()->with('success', 'Notification marquée comme lue.');
+ }
+ 
 }

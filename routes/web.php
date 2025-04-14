@@ -9,8 +9,10 @@ use App\Http\Controllers\StatistiquesController;
 use App\Http\Controllers\UtilisateursController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\StatistiqueController;
 use App\Models\Facture;
 use App\Models\Notification;
+use App\Http\Controllers\PayementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,4 +96,19 @@ Route::post('/commandes/store',[CommandeController::class, 'store'])->name('comm
 Route::get('/commandes/create',[CommandeController::class, 'create'])->name('commandes.create');
 Route::get('/factures',[FactureController::class, 'index'])->name('factures.client');
 Route::get('/notifications/client',[NotificationController::class, 'index'])->name('notifications.client');
+//Route pour voir les commandes cote gestionnaire
+Route::get('/commandes/gestionnaire',[CommandeController::class, 'getCommandeForGestionnaire'])->name('commande.gestionnaire');
+//Validation ou refus d'une commande
+Route::post('/gestion/commandes/{id}/action', [CommandeController::class, 'traiter'])->name('commandes.traiter');
+//Pour marquer une notification comme lue
+Route::post('/notifications/{id}/marquer-comme-lue', [NotificationController::class, 'marquerCommeLue'])->name('notifications.marquerCommeLue');
+//pour afficher les notifications disponibles
+Route::get('/notifications',[NotificationController::class, 'afficherNotifications'])->name('notifications');
+//Pour le paiement d'une facture
+Route::post('/paiement/{commande}', [PayementController::class, 'effectuer'])->name('paiement.effectuer');
+//Pour les factures
+Route::get('/factures/index', [FactureController::class, 'index'])->name('factures.index');
+//Pour les statistiques
+Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistiques');
+
 require __DIR__.'/auth.php';

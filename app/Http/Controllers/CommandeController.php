@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StatutCommandeMail;
 use Illuminate\Http\Request;
 use App\Notifications\NouvelleCommandeNotification;
 use App\Models\User;
 use App\Models\Commande;
 use App\Models\Livre;
+use App\Models\Notification; 
 use Illuminate\Support\Facades\DB;
 
 class CommandeController extends Controller
@@ -129,5 +131,43 @@ class CommandeController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    /*public function getCommandeForGestionnaire(){
+        $commandes = Commande::where('status', 'en_attente')->get();
+        return view('gestionnaire.commande', compact('commandes'));
+    }*/
+    public function getCommandeForGestionnaire()
+    {
+   /* $commandes = Commande::where('status', 'en_attente')
+        ->with('user') // chargement de la relation
+        ->get();*/
+        $commandes = Commande::with('user')->get(); // pas de where
+        return view('gestionnaire.commande', compact('commandes'));    
+
+    return view('gestionnaire.commande', compact('commandes'));
+    }
+
+    public function traiter(Request $request, $id)
+    {
+        $commande = Commande::findOrFail($id);
+        $statut = ''; 
+        if ($request->action === 'valider') {
+            $commande->status = 'payée';
+        } elseif ($request->action === 'refuser') {
+            $commande->status = 'annulée';
+        }
+
+        $commande->save();
+        // Envoi du mail à l'utilisateur
+        //Mail::to($commande->user->email)->send(new StatutCommandeMail($commande));
+        // Envoi du mail
+       Mail::to($commande->user->email)->send(new StatutCommandeMail($commande, $statut));
+        // Ajout de la notification dans la table notifications
+        Notification::create([
+        'userId' => $commande->user->id,
+        'message' => 'Votre commande numero' . $commande->id . ' a été ' . $statut . '.',
+        'dateLecture' => null, // NULL signifie que la notification n'a pas été lue
+       ]);
+        return redirect()->route('commande.gestionnaire')->with('success', 'Commande mise à jour.');
     }
 }

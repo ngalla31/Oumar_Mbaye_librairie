@@ -25,13 +25,13 @@
                         <x-nav-link :href="route('categories')" :active="request()->routeIs('livres.index')">
                             {{ __('Gérer les categories') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('commandes')" :active="request()->routeIs('commandes.index')">
+                        <x-nav-link :href="route('commande.gestionnaire')" :active="request()->routeIs('commandes.index')">
                             {{ __('Voir les commandes') }}
                         </x-nav-link>
                         <x-nav-link :href="route('statistiques')" :active="request()->routeIs('statistiques.index')">
                             {{ __('Statistiques') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('statistiques')" :active="request()->routeIs('statistiques.index')">
+                        <x-nav-link :href="route('notifications')" :active="request()->routeIs('statistiques.index')">
                             {{ __('Notifications') }}
                         </x-nav-link>
                         <x-nav-link :href="route('utilisateurs')" :active="request()->routeIs('statistiques.index')">
@@ -45,10 +45,10 @@
                         <x-nav-link :href="route('commandes.client')" :active="request()->routeIs('commandes.index')">
                             {{ __('Mes commandes') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('factures.client')" :active="request()->routeIs('commandes.index')">
+                        <x-nav-link :href="route('factures.index')" :active="request()->routeIs('commandes.index')">
                             {{ __('Mes factures') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('notifications.client')" :active="request()->routeIs('commandes.index')">
+                        <x-nav-link :href="route('notifications')" :active="request()->routeIs('commandes.index')">
                             {{ __('Mes notifications') }}
                         </x-nav-link>
                     @endif
